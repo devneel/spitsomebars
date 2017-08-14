@@ -3,6 +3,7 @@ extends ../layout
 block content
   .page-header
     h3 Sign up
+    
   form.form-horizontal(id='signup-form', method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
     .form-group
@@ -17,6 +18,10 @@ block content
       label.col-sm-3.control-label(for='confirmPassword') Confirm Password
       .col-sm-7
         input.form-control(type='password', name='confirmPassword', id='confirmPassword', placeholder='Confirm Password', required)
+    .form-group
+      label.col-sm-3.control-label(for='rappaname') Rappa Name
+      .col-sm-7
+        input.form-control(type='text', name='rappaname', id='rappaname', placeholder='ur rappa name', autofocus, required)
     .form-group
       .col-sm-offset-3.col-sm-7
         button.btn.btn-success(type='submit')

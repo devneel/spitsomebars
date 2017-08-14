@@ -41,7 +41,7 @@ exports.postLogin = (req, res, next) => {
     }
     req.logIn(user, (err) => {
       if (err) { return next(err); }
-      req.flash('success', { msg: 'Success! You are logged in.' });
+      req.flash('success', { msg: 'Heyyo ' + user.rappaname + ' wassgooood?' });
       res.redirect(req.session.returnTo || '/');
     });
   })(req, res, next);
@@ -88,7 +88,8 @@ exports.postSignup = (req, res, next) => {
 
   const user = new User({
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
+    rappaname: req.body.rappaname
   });
 
   User.findOne({ email: req.body.email }, (err, existingUser) => {
@@ -134,13 +135,18 @@ exports.postUpdateProfile = (req, res, next) => {
     return res.redirect('/account');
   }
 
+
+
   User.findById(req.user.id, (err, user) => {
     if (err) { return next(err); }
     user.email = req.body.email || '';
+    user.rappaname = req.body.rappaname || '';
+    user.portfolio = req.body.portfolio || '';
     user.profile.name = req.body.name || '';
     user.profile.gender = req.body.gender || '';
     user.profile.location = req.body.location || '';
     user.profile.website = req.body.website || '';
+
     user.save((err) => {
       if (err) {
         if (err.code === 11000) {
@@ -149,7 +155,10 @@ exports.postUpdateProfile = (req, res, next) => {
         }
         return next(err);
       }
-      req.flash('success', { msg: 'Profile information has been updated.' });
+      console.log("user._id " + user._id + 'and rappa name is ' + user.rappaname)
+      console.log("updated:")
+      console.log(user);
+      req.flash('success', { msg: "Alright cool your profile has been updated. <a href='/this-rappa/" + user._id + "' class='text-primary'>Check out</a> your fresh public rappa page" });
       res.redirect('/account');
     });
   });

@@ -25,7 +25,7 @@ const upload = multer({ dest: path.join(__dirname, 'uploads') });
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
-dotenv.load({ path: '.env.example' });
+dotenv.load({ path: '.env' });
 
 /**
  * Controllers (route handlers).
@@ -34,6 +34,7 @@ const homeController = require('./controllers/home');
 const userController = require('./controllers/user');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
+const barsController = require('./controllers/bars');
 
 /**
  * API keys and Passport configuration.
@@ -61,6 +62,7 @@ mongoose.connection.on('error', (err) => {
  */
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
+
 app.set('view engine', 'pug');
 app.use(expressStatusMonitor());
 app.use(compression());
@@ -115,9 +117,43 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 
 /**
+* Bars Routes by dev
+*/
+
+//view bars
+
+app.get('/', barsController.getAllBars);
+
+app.get('/my-bars', passportConfig.isAuthenticated, barsController.getMyBars);
+
+app.get('/this-rappa/:id', barsController.getBarsForThisRappa);
+
+
+// set bars
+
+app.get('/spit-bars',barsController.spitBars);
+
+app.post('/spit-bars', barsController.postBars);
+
+
+// edit bars
+
+app.get('/edit-bars', passportConfig.isAuthenticated, barsController.editBars);
+
+app.post('/edit-bars', passportConfig.isAuthenticated, barsController.submitEdittedBars);
+
+
+// delete bars
+
+app.post('/delete-bars', passportConfig.isAuthenticated, barsController.deleteBars);
+
+// post submitting judgement (votes)
+app.post('/judgement', barsController.submitJudgement);
+
+/**
  * Primary app routes.
  */
-app.get('/', homeController.index);
+
 app.get('/login', userController.getLogin);
 app.post('/login', userController.postLogin);
 app.get('/logout', userController.logout);

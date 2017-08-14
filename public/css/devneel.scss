@@ -1,0 +1,67 @@
+// Dev Styles
+// -------------------------
+
+
+// the Bar
+.theBar {
+  margin: 50px;
+  border: 1px solid #f7f7f7;
+  position: relative;
+}
+
+.footer {
+  margin-top: 20px;
+}
+
+// cred widget - show off youtube
+.cred {
+  margin-top: 50px;
+  text-align: center;
+}
+
+// ratings widget
+.ratingWidget {
+  position: absolute;
+  padding: 5px;
+  right: 3px;
+  bottom: 0px;
+}
+
+// bar actions
+.barActions {
+  padding: 2px;
+}
+
+.btn-noborder{
+  border:0px;
+}
+
+.barActions .fa{
+  margin-right: 0px;
+  text-align: center;
+  color: #777;
+}
+
+.barActions .btn{
+  padding: 2px 4px;
+  border-width: 1.5px;
+}
+
+.delete:hover {
+  color:$brand-danger;
+}
+
+.edit:hover{
+  color:$brand-info;
+}
+
+//form
+
+#barsText {
+  height: 14em;
+}
+
+.text-rappaname {
+  color: #33CC55;
+  font-size: 1.5em;
+}

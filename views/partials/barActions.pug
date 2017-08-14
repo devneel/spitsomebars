@@ -1,0 +1,12 @@
+.pull-right
+  table.barActions
+    tr
+      td
+        a.btn.btn-info.btn-noborder(href="/edit-bars?id=" + theBar._id title='Edit')
+          i.fa.fa-pencil.edit
+      td
+        form(action='/delete-bars', method='post')
+          input(type='hidden', name='_csrf', value=_csrf)
+          input(type='hidden', name='id', value=theBar._id)
+          button.btn.btn-info.btn-noborder(type='submit' title="Delete")
+            i.fa.fa-trash.delete

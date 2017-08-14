@@ -1,0 +1,29 @@
+
+extends ../layout
+
+block content
+  .row
+    .col-sm-7
+      .page-header.text-center
+        h3 Your Bars
+
+      if bars.length > 0
+        for theBar,index in bars 
+          include ../partials/theBar
+      else
+        .alert.alert-info
+          p You don't have any bars yet #{user.rappaname}! 
+            a(href='/spit-bars') Go spit some bars
+            | .
+        
+    //-  if rappa already has provided a portfolio link, then show that cred link 
+    if user.portfolio
+      .col-sm-5
+        .page-header.text-center
+          h3 Your cred link
+          include ../partials/cred
+    else
+      .col-sm-5
+        .page-header.text-center
+          h3 Your Cred Link
+          include ../partials/getCred

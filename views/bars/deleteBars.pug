@@ -1,0 +1,15 @@
+
+extends ../layout
+
+block content
+  .row
+    .col-sm-6.col-sm-offset-3
+      .page-header
+        h3.text-center Delete Bars
+
+      for theBar,index in bars 
+        .theBar
+          blockquote
+            p !{theBar.bars.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')}
+            .footer.small the great 
+              cite(title='original rappa') #{theBar.author}

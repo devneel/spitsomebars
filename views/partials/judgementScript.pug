@@ -1,0 +1,20 @@
+script.
+    $(document).ready(function() {
+
+
+
+      var callback = function(data) {
+          console.log("#{theBar.thisUserVoted}")
+          $.ajax({
+              url: '/judgement',
+              type: 'POST',
+              data: { id: "#{theBar._id}", up: data.upvoted, down: data.downvoted, star: data.starred, _csrf: "#{_csrf}" }
+
+          }).done(function( msg ) {
+            alert( "Data Saved: " + msg );
+          });
+      };
+
+      // Initiate the upvote count at 1 upvote
+      $("##{theBar._id}").upvote({id: "#{theBar._id}", upvoted:#{theBar.thisUserVoted}, callback: callback});
+    });

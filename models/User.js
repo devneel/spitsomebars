@@ -1,10 +1,14 @@
 const bcrypt = require('bcrypt-nodejs');
 const crypto = require('crypto');
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
+
+
 
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: String,
+  rappaname: String,
+  portfolio: String,
   passwordResetToken: String,
   passwordResetExpires: Date,
 
@@ -16,7 +20,6 @@ const userSchema = new mongoose.Schema({
   linkedin: String,
   steam: String,
   tokens: Array,
-
   profile: {
     name: String,
     gender: String,
@@ -25,6 +28,7 @@ const userSchema = new mongoose.Schema({
     picture: String
   }
 }, { timestamps: true });
+
 
 /**
  * Password hash middleware.

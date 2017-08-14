@@ -1,0 +1,45 @@
+extends ../layout
+
+block content
+  .row
+    .col-sm-6.col-sm-offset-3
+      h1 Spit Your Bars
+        hr
+        if bars
+          for theBar in bars
+            include ../partials/theBar
+
+      if !user
+        .alert.alert-info 
+          p You can spit bars anonymously or you can first 
+            a(href="/login") login
+            |  so your bars get saved
+      form(action='/spit-bars', method='post')
+        input(type='hidden', name='_csrf', value=_csrf)
+        .form-group
+            label(for='bars') Spit bars here
+            textarea#barsText.form-control(name='bars', placeholder='watchu got?' required)
+        
+        
+        //- if user, then user the users rappa name
+        label(for='author') who you be?
+        if user 
+          .form-group
+            input(type='hidden', name='createdBy', value=user.email)
+            input(type='hidden' name='author_id' value=user._id)
+            input(type='hidden' name='author' value=user.rappaname)
+            p The one, the only   
+              span.text-rappaname #{user.rappaname}
+        
+        //- if not user, then allow anonymous rappa names
+        else
+          .form-group
+            input(type='hidden', name='createdBy', value='anon')
+            input#barsAuthor.form-control(name='anon_author' placeholder='rappa name' required)          
+          p 
+            a(href="/login") Log in to save your bars  
+            
+            
+        //- submit button
+        .form-group
+          button.btn.btn-primary.pull-right(type='submit', value='Spit') Spit it

@@ -1,0 +1,19 @@
+.theBar
+  if user    
+    if theBar.author && theBar.author._id == user._id || user.email == "devneel@gmail.com"
+      .pull-right.barActions
+        include ../partials/barActions
+  blockquote
+    p !{theBar.bars.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>')}
+
+        
+    .footer.small the great 
+      cite(title='original rappa') 
+        if theBar.author
+          a(href="/this-rappa/" + theBar.author._id)
+            | #{theBar.author.rappaname}
+        else
+           | #{theBar.anon_author}
+  
+  if user
+    include ../partials/ratingWidget

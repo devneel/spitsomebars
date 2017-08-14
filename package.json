@@ -1,15 +1,15 @@
 {
-  "name": "hackathon-starter",
-  "version": "4.3.0",
-  "description": "A boilerplate for Node.js web applications",
+  "name": "spitsomebars",
+  "version": "1.0.0",
+  "description": "A place for homies to spit bars you kno",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sahat/hackathon-starter.git"
+    "url": "https://github.com/devneel/spitsomebars.git"
   },
-  "author": "Sahat Yalkabov",
+  "author": "Devneel Vaidya",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "nodemon spitsomebars.js",
     "test": "mocha --reporter spec",
     "postinstall": "npm rebuild node-sass",
     "eslint": "eslint **/*.js"

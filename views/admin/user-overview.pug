@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+  .page-header
+    h1 User Overview
+  .cred
+    table.table
+      tr
+        th User Number
+        th Rappa Name
+        th Email
+        th Cred
+        th Created On
+        th Updated On
+        th Last Logged In
+      for user,index in users
+        tr
+          td #{index+1}
+          td #{user.rappaname}
+          td #{user.email}
+          td 
+            a(href=user.portfolio title=user.portfolio) Link
+          td #{user.createdAt}
+          td #{user.updatedAt}
+          td #{user.lastLoggedIn}
+          
+          
+    
+      
+      
+      

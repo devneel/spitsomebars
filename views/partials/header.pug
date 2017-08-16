@@ -15,6 +15,9 @@
           a(href='/') See Bars
         li(class=(title == 'Spit Bars') ? 'active' : undefined)
           a(href='/spit-bars') Spit Bars
+        if user && user.isAdmin
+          li(class=(title == 'Admin') ? 'active' : undefined)
+            a(href='/admin') Admin
 
           
         

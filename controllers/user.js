@@ -89,7 +89,8 @@ exports.postSignup = (req, res, next) => {
   const user = new User({
     email: req.body.email,
     password: req.body.password,
-    rappaname: req.body.rappaname
+    rappaname: req.body.rappaname,
+    createdAt: Date.now()
   });
 
   User.findOne({ email: req.body.email }, (err, existingUser) => {
@@ -142,6 +143,7 @@ exports.postUpdateProfile = (req, res, next) => {
     user.email = req.body.email || '';
     user.rappaname = req.body.rappaname || '';
     user.portfolio = req.body.portfolio || '';
+    user.updatedAt = Date.now();
     user.profile.name = req.body.name || '';
     user.profile.gender = req.body.gender || '';
     user.profile.location = req.body.location || '';
@@ -382,4 +384,27 @@ exports.postForgot = (req, res, next) => {
     .then(sendForgotPasswordEmail)
     .then(() => res.redirect('/forgot'))
     .catch(next);
+};
+
+/**
+ * GET admin
+ * Admin overview page.
+ */
+exports.getAdminOverview = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return res.redirect('/');
+  }
+  User
+    .findOne({ passwordResetToken: req.params.token })
+    .where('passwordResetExpires').gt(Date.now())
+    .exec((err, user) => {
+      if (err) { return next(err); }
+      if (!user) {
+        req.flash('errors', { msg: 'Password reset token is invalid or has expired.' });
+        return res.redirect('/forgot');
+      }
+      res.render('account/reset', {
+        title: 'Password Reset'
+      });
+    });
 };

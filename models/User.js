@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
   portfolio: String,
   passwordResetToken: String,
   passwordResetExpires: Date,
-
+  lastLoggedIn : {type: Date, default: Date.now()},
   facebook: String,
   twitter: String,
   google: String,
@@ -26,7 +26,8 @@ const userSchema = new mongoose.Schema({
     location: String,
     website: String,
     picture: String
-  }
+  },
+  isAdmin: {type: Boolean, default: false},
 }, { timestamps: true });
 
 
@@ -68,6 +69,12 @@ userSchema.methods.gravatar = function gravatar(size) {
   const md5 = crypto.createHash('md5').update(this.email).digest('hex');
   return `https://gravatar.com/avatar/${md5}?s=${size}&d=retro`;
 };
+
+
+userSchema.statics.login = function login(id, callback) {
+   return this.findByIdAndUpdate(id, { $set : { 'lastLoggedIn' : Date.now() }}, { new : true }, callback);
+};
+
 
 const User = mongoose.model('User', userSchema);
 

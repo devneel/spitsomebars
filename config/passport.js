@@ -17,10 +17,11 @@ passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
+passport.deserializeUser(function(id, done) {
+   User.login(id, function(err, user) {
+    if(err) return done(err, null);
     done(err, user);
-  });
+   });
 });
 
 /**
@@ -526,5 +527,17 @@ exports.isAuthorized = (req, res, next) => {
     next();
   } else {
     res.redirect(`/auth/${provider}`);
+  }
+};
+
+
+// added by devneel - admin is required middleware
+exports.isAdmin = (req, res, next) => {
+const user = req.user;
+
+ if(user.isAdmin){
+    next();
+  } else {
+    res.send('You are not an admin user');
   }
 };

@@ -23,8 +23,8 @@
         
       ul.nav.navbar-nav.navbar-right
         if !user
-          li(class=(title == 'Login') ? 'active' : undefined)
-            a(href='/login') Login
+          li(class=(title == 'Log in') ? 'active' : undefined)
+            a(href='/login') Log in
 
         else
           li.dropdown(class=(title == 'Account Management') ? 'active' : undefined)

@@ -11,7 +11,7 @@ script.
               data: { id: "#{theBar._id}", up: data.upvoted, down: data.downvoted, star: data.starred, _csrf: "#{_csrf}" }
 
           }).done(function( msg ) {
-            alert( "Data Saved: " + msg );
+            console.log( "Data Saved: " + msg );
           });
       };
 

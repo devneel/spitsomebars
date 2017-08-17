@@ -141,7 +141,7 @@ exports.postUpdateProfile = (req, res, next) => {
 
   var seeIfUserExists = function(callback) {
     User.find({'email' : req.body.email}, function(err, user) {
-      if(user.length > 0) {
+      if(user.length > 0 && req.user.email != req.body.email) {
         console.log("User already exists for the email " + req.body.email)
         req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
         return res.redirect('/account');

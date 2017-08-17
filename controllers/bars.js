@@ -9,19 +9,20 @@ const mongoose = require('mongoose');
 exports.getAllBars = (req, res) => {
   Bars.find({}).populate('author').sort('-createdOn').exec( function (err, bars)  {
     console.log("Loaded " + bars.length + " bars")
-    if(req.user) {
-      bars.forEach(function(theBar) {
+    bars.forEach(function(theBar) {
 
-        var thisUserVoted = theBar.voted(req.user._id)
+      if(req.user) {
+          theBar.thisUserVoted = theBar.voted(req.user._id) == true ? 1 : 0
+      }
 
-        theBar.thisUserVoted = thisUserVoted == true ? 1 : 0
-        theBar.numUpVotes = theBar.upvotes();
+      theBar.numUpVotes = theBar.upvotes();
+    });
 
-        bars.sort(function(a, b){
-          return b.numUpVotes-a.numUpVotes
-        })
-      });
-    }
+    //sort bars by number of upvotes
+    bars.sort(function(a, b){
+      return b.numUpVotes-a.numUpVotes
+    })
+    
     res.render('bars/viewBars', { bars: bars });
   });
 };

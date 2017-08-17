@@ -1,5 +1,8 @@
 .ratingWidget
   .upvote(id=theBar.id)
-    a.upvote
+    if user
+      a.upvote
+    else
+      a.upvote(href="#" data-toggle="tooltip" data-placement="top" title="Login first homie")
     span.count #{theBar.vote.positive.length}
     include ../partials/judgementScript

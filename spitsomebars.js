@@ -149,7 +149,7 @@ app.post('/edit-bars', passportConfig.isAuthenticated, barsController.submitEdit
 app.post('/delete-bars', passportConfig.isAuthenticated, barsController.deleteBars);
 
 // post submitting judgement (votes)
-app.post('/judgement', barsController.submitJudgement);
+app.post('/judgement', passportConfig.isAuthenticated, barsController.submitJudgement);
 
 // ADMIN ROUTES
 

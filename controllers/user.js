@@ -3,6 +3,8 @@ const crypto = bluebird.promisifyAll(require('crypto'));
 const nodemailer = require('nodemailer');
 const passport = require('passport');
 const User = require('../models/User');
+const async = require('async');
+
 
 /**
  * GET /login
@@ -137,33 +139,62 @@ exports.postUpdateProfile = (req, res, next) => {
   }
 
 
-
-  User.findById(req.user.id, (err, user) => {
-    if (err) { return next(err); }
-    user.email = req.body.email || '';
-    user.rappaname = req.body.rappaname || '';
-    user.portfolio = req.body.portfolio || '';
-    user.updatedAt = Date.now();
-    user.profile.name = req.body.name || '';
-    user.profile.gender = req.body.gender || '';
-    user.profile.location = req.body.location || '';
-    user.profile.website = req.body.website || '';
-
-    user.save((err) => {
-      if (err) {
-        if (err.code === 11000) {
-          req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
-          return res.redirect('/account');
-        }
-        return next(err);
+  var seeIfUserExists = function(callback) {
+    User.find({'email' : req.body.email}, function(err, user) {
+      if(user.length > 0) {
+        console.log("User already exists for the email " + req.body.email)
+        req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
+        return res.redirect('/account');
+        callback(null, true)
       }
-      console.log("user._id " + user._id + 'and rappa name is ' + user.rappaname)
-      console.log("updated:")
-      console.log(user);
-      req.flash('success', { msg: "Alright cool your profile has been updated. <a href='/this-rappa/" + user._id + "' class='text-primary'>Check out</a> your fresh public rappa page" });
-      res.redirect('/account');
+      else {
+        console.log("User is allowed to change email to " + req.body.email)
+        callback(null, false)
+      }
+    })
+  }
+
+
+  var updateUser = function(callback) {
+    User.findById(req.user.id, (err, user) => {
+      if (err) { return next(err); }
+      user.email = req.body.email || '';
+      user.rappaname = req.body.rappaname || '';
+      user.portfolio = req.body.portfolio || '';
+      user.updatedAt = Date.now();
+      user.profile.name = req.body.name || '';
+      user.profile.gender = req.body.gender || '';
+      user.profile.location = req.body.location || '';
+      user.profile.website = req.body.website || '';
+
+      user.save((err) => {
+        if (err) {
+          if (err.code === 11000) {
+            req.flash('errors', { msg: 'The email address you have entered is already associated with an account.' });
+            return res.redirect('/account');
+            callback(null, 'email in use')
+          }
+          return next(err);
+        }
+        console.log("user._id " + user._id + 'and rappa name is ' + user.rappaname)
+        console.log("updated:")
+        console.log(user);
+        req.flash('success', { msg: "Alright cool your profile has been updated. <a href='/this-rappa/" + user._id + "' class='text-primary'>Check out</a> your fresh public rappa page" });
+        res.redirect('/account');
+        callback(null, 'Success, updated profile')
+      });
     });
-  });
+  }
+
+
+
+  async.series([
+    seeIfUserExists,
+    updateUser
+  ], function(err, result) {
+    if(err) return err;
+    console.log(result)
+  })
 };
 
 /**

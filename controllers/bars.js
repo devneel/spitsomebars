@@ -4,25 +4,13 @@
  */
 const Bars = require('../models/Bars.js');
 const mongoose = require('mongoose');
+const BarsHelper = require('./bars-helper')
+var barsHelper = new BarsHelper();
 
 //get bars across whole site
 exports.getAllBars = (req, res) => {
   Bars.find({}).populate('author').sort('-createdOn').exec( function (err, bars)  {
-    console.log("Loaded " + bars.length + " bars")
-    bars.forEach(function(theBar) {
-
-      if(req.user) {
-          theBar.thisUserVoted = theBar.voted(req.user._id) == true ? 1 : 0
-      }
-
-      theBar.numUpVotes = theBar.upvotes();
-    });
-
-    //sort bars by number of upvotes
-    bars.sort(function(a, b){
-      return b.numUpVotes-a.numUpVotes
-    })
-
+    bars = barsHelper.prepareBarsList(bars, req.user || null);
     res.render('bars/viewBars', { bars: bars });
   });
 };
@@ -30,7 +18,7 @@ exports.getAllBars = (req, res) => {
 // get bars for logged in user
 exports.getMyBars = (req, res) => {
   Bars.find({author : req.user._id}).populate('author').sort('-createdOn').exec( function (err, bars)  {
-    console.log("Loaded " + bars.length + " bars")
+    bars = barsHelper.prepareBarsList(bars, req.user || null);
     res.render('bars/myBars', { bars: bars });
   });
 };
@@ -41,29 +29,16 @@ exports.getBarsForThisRappa = (req, res) => {
   oembetter.whitelist(oembetter.suggestedWhitelist);
 
   var id = req.params.id != null ? req.params.id : req.user._id
-  console.log("ID is " + id)
+
 
   Bars.find({author: id}).populate('author').sort('-createdOn').exec( function (err, bars)  {
     if(err) throw err;
 
-    // see if this user voted, and capture upvotes for each bar
-    bars.forEach(function(theBar) {
+    bars = barsHelper.prepareBarsList(bars, req.user || null);
 
-      if(req.user) {
-          theBar.thisUserVoted = theBar.voted(req.user._id) == true ? 1 : 0
-      }
-
-      theBar.numUpVotes = theBar.upvotes();
-    });
-
-    //sort bars by number of upvotes
-    bars.sort(function(a, b){
-      return b.numUpVotes-a.numUpVotes
-    })
-    console.log("bars are " + bars)
     var portfolioLink = bars[0].author.portfolio || null;
     if(portfolioLink) {
-      console.log("In the portfolio link")
+
       oembetter.fetch(portfolioLink, function(err, response) {
         if (!err) {
           // response.html contains markup to embed the video or

@@ -7,6 +7,10 @@ const mongoose = require('mongoose');
 const BarsHelper = require('./bars-helper')
 var barsHelper = new BarsHelper();
 
+// for embedding portfolio link
+var oembetter = require('oembetter')();
+oembetter.whitelist(oembetter.suggestedWhitelist);
+
 //get bars across whole site
 exports.getAllBars = (req, res) => {
   Bars.find({}).populate('author').sort('-createdOn').exec( function (err, bars)  {
@@ -19,14 +23,26 @@ exports.getAllBars = (req, res) => {
 exports.getMyBars = (req, res) => {
   Bars.find({author : req.user._id}).populate('author').sort('-createdOn').exec( function (err, bars)  {
     bars = barsHelper.prepareBarsList(bars, req.user || null);
-    res.render('bars/myBars', { bars: bars });
+    var portfolioLink = bars[0].author.portfolio || null;
+    if(portfolioLink) {
+
+      oembetter.fetch(portfolioLink, function(err, response) {
+        if (!err) {
+          // response.html contains markup to embed the video or
+          // whatever it might be
+          bars[0].author.portfolio = response.html
+          res.render('bars/viewThisRappaBars', {bars: bars})
+        }
+      });
+    } else {
+      res.render('bars/viewThisRappaBars', {bars: bars})
+    }
   });
 };
 
 // get bars for a rappa by id
 exports.getBarsForThisRappa = (req, res) => {
-  var oembetter = require('oembetter')();
-  oembetter.whitelist(oembetter.suggestedWhitelist);
+
 
   var id = req.params.id != null ? req.params.id : req.user._id
 

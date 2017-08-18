@@ -48,6 +48,7 @@ exports.getBarsForThisRappa = (req, res) => {
     console.log("bars are " + bars)
     var portfolioLink = bars[0].author.portfolio || null;
     if(portfolioLink) {
+      console.log("In the portfolio link")
       oembetter.fetch(portfolioLink, function(err, response) {
         if (!err) {
           // response.html contains markup to embed the video or

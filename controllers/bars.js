@@ -46,18 +46,19 @@ exports.getBarsForThisRappa = (req, res) => {
   Bars.find({author: id}).populate('author').sort('-createdOn').exec( function (err, bars)  {
     if(err) throw err;
     console.log("bars are " + bars)
-    var portfolioLink = bars[0].author.portfolio || '';
-    oembetter.fetch(portfolioLink, function(err, response) {
-      if (!err) {
-        // response.html contains markup to embed the video or
-        // whatever it might be
-        bars[0].author.portfolio = response.html
-        res.render('bars/viewThisRappaBars', {bars: bars})
-      } else {
-        res.render('bars/viewThisRappaBars', {bars: bars})
-      }
-
-    });
+    var portfolioLink = bars[0].author.portfolio || null;
+    if(portfolioLink) {
+      oembetter.fetch(portfolioLink, function(err, response) {
+        if (!err) {
+          // response.html contains markup to embed the video or
+          // whatever it might be
+          bars[0].author.portfolio = response.html
+          res.render('bars/viewThisRappaBars', {bars: bars})
+        }
+      });
+    } else {
+      res.render('bars/viewThisRappaBars', {bars: bars})
+    }
   });
 };
 

@@ -41,7 +41,7 @@ exports.getBarsForThisRappa = (req, res) => {
   oembetter.whitelist(oembetter.suggestedWhitelist);
 
   var id = req.params.id != null ? req.params.id : req.user._id
-  console.log("ID is " id)
+  console.log("ID is " + id)
 
   Bars.find({author: id}).populate('author').sort('-createdOn').exec( function (err, bars)  {
     if(err) throw err;

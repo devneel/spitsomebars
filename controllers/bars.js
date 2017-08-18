@@ -45,6 +45,7 @@ exports.getBarsForThisRappa = (req, res) => {
 
   Bars.find({author: id}).populate('author').sort('-createdOn').exec( function (err, bars)  {
     if(err) throw err;
+    console.log("bars are " + bars)
     var portfolioLink = bars[0].author.portfolio || '';
     oembetter.fetch(portfolioLink, function(err, response) {
       if (!err) {

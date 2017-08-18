@@ -45,6 +45,21 @@ exports.getBarsForThisRappa = (req, res) => {
 
   Bars.find({author: id}).populate('author').sort('-createdOn').exec( function (err, bars)  {
     if(err) throw err;
+
+    // see if this user voted, and capture upvotes for each bar
+    bars.forEach(function(theBar) {
+
+      if(req.user) {
+          theBar.thisUserVoted = theBar.voted(req.user._id) == true ? 1 : 0
+      }
+
+      theBar.numUpVotes = theBar.upvotes();
+    });
+
+    //sort bars by number of upvotes
+    bars.sort(function(a, b){
+      return b.numUpVotes-a.numUpVotes
+    })
     console.log("bars are " + bars)
     var portfolioLink = bars[0].author.portfolio || null;
     if(portfolioLink) {

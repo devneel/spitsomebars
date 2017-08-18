@@ -22,7 +22,7 @@ exports.getAllBars = (req, res) => {
     bars.sort(function(a, b){
       return b.numUpVotes-a.numUpVotes
     })
-    
+
     res.render('bars/viewBars', { bars: bars });
   });
 };
@@ -41,6 +41,7 @@ exports.getBarsForThisRappa = (req, res) => {
   oembetter.whitelist(oembetter.suggestedWhitelist);
 
   var id = req.params.id != null ? req.params.id : req.user._id
+  console.log("ID is " id)
 
   Bars.find({author: id}).populate('author').sort('-createdOn').exec( function (err, bars)  {
     if(err) throw err;

@@ -2,7 +2,6 @@
 extends ../layout
 
 block content
-  p #{bars}
   
   if bars[0].author.portfolio
     .row
@@ -16,19 +15,6 @@ block content
         .page-header.text-center
           h3 #{bars[0].author.rappaname}'s Cred
           include ../partials/cred
-  else if user
-    if user._id.toString() == bars[0].author._id.toString()
-      .row
-        .col-sm-7
-          .page-header.text-center
-            h3 #{bars[0].author.rappaname}'s Hot Bars
-
-          for theBar,index in bars 
-            include ../partials/theBar
-        .col-sm-5
-          .page-header.text-center
-            h3 #{bars[0].author.rappaname}'s Cred 
-            include ../partials/getCred
   else
     .row
       .col-sm-6.col-sm-offset-3
